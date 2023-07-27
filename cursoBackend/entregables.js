@@ -73,28 +73,26 @@
 
 
 
- const { log } = require('console')
+
 const fs = require('fs')
  class Contenedor{
      constructor(path){
          this.path=path,
-         this.id=1
+         this.id=0
          this.contenido=[]
      }
-      async save(obj) {
-         try {
-             obj.id=this.id
-             this.id++
-
-             this.contenido.push(obj)
-             const a= this.contenido
-             const guardado=await fs.promises.appendFile(this.path, JSON.stringify(a))
-             return guardado
-            
-         } catch (error) {
-             console.log("No se pudo cargar el prod", error);
-         }
-     }
+     async save(obj) {
+        try {
+          obj.id = ++this.id;
+          this.contenido.push(obj);
+          const content = JSON.stringify(this.contenido);
+          console.log("ESTO ES EL CONTENT:", content);
+          const items = await fs.promises.writeFile(this.path, content);
+          return items;
+        } catch (error) {
+          console.log("No se pudo cargar el prod", error);
+        }
+      }
      async getById(id){
         const objects= await this.getAll()
         const objectFinded= objects.find((obj)=>obj.id == id)
@@ -103,27 +101,32 @@ const fs = require('fs')
      }
      async getAll(){
          try {
+             
                 const readedProduct= await fs.promises.readFile(`${this.path}`, "utf-8")
-                
+                const parsed= JSON.parse(readedProduct)
 
-                console.log(readedProduct);
-                // return readedProduct
+                console.log("ESTA ES LA LISTA DE OBJETOS:",parsed);
+                 return parsed
          
                
          } catch (error) {
-             console.log("no se pudo leer");
+             console.log("Lista vacía");
          }
         
      }
      async deleteById(id){
+        await this.getAll()
         const objects= this.contenido
         const objectDeleted= objects.filter((obj)=>obj.id !== id)
         console.log(`SE HA BORRADO EL OBJ CON EL ID ${id}, NUEVA LISTA DE OBJ: `, objectDeleted);
         return objectDeleted || null
      }
      async deleteAll(){
-        await this.save()
+        await this.getAll()
+       await fs.promises.writeFile(this.path,[])
+       this.getAll()
      }
+
  }
  const contenedor1 = new Contenedor("productos.txt")
 
@@ -140,5 +143,8 @@ const fs = require('fs')
 
 contenedor1.save(prod1)
 contenedor1.save(prod2)
+
  contenedor1.getAll()
-//contenedor1.getById(1)
+contenedor1.getById(1)
+contenedor1.deleteById(2)
+contenedor1.deleteAll()
