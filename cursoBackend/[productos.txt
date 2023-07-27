@@ -1,0 +1,1 @@
+{"title":"Manzana","price":250,"thumbnail":"ruta1","id":1}]{"title":"Manzana","price":250,"thumbnail":"ruta1","id":1},{"title":"Manzanas","price":2502,"thumbnail":"ruta2","id":2}]{"title":"Manzana","price":250,"thumbnail":"ruta1","id":1}]{"title":"Manzanas","price":2502,"thumbnail":"ruta2","id":2}]
