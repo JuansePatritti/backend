@@ -83,68 +83,111 @@ const fs = require('fs')
      }
      async save(obj) {
         try {
-          obj.id = ++this.id;
-          this.contenido.push(obj);
-          const content = JSON.stringify(this.contenido);
-          console.log("ESTO ES EL CONTENT:", content);
-          const items = await fs.promises.writeFile(this.path, content);
-          return items;
+           const objects = await this.getObjects()
+           const nuevoID= ++this.id
+          obj.id = nuevoID;
+          objects.push(obj)
+         await this.saveObjects(objects)
+         return nuevoID
+          // console.log("ESTO ES EL CONTENT:", content);
+          // const items = await fs.promises.writeFile(this.path, content);
+          // return items;
         } catch (error) {
           console.log("No se pudo cargar el prod", error);
         }
       }
      async getById(id){
-        const objects= await this.getAll()
+        const objects= await this.getObjects()
         const objectFinded= objects.find((obj)=>obj.id == id)
         console.log(`EL OBJ ENCONTRADO CON EL ID ${id} ES`, objectFinded);
         return objectFinded || null
      }
      async getAll(){
          try {
-             
-                const readedProduct= await fs.promises.readFile(`${this.path}`, "utf-8")
-                const parsed= JSON.parse(readedProduct)
 
-                console.log("ESTA ES LA LISTA DE OBJETOS:",parsed);
-                 return parsed
-         
+                const objects= await this.getObjects()
+                // const readedProduct= await fs.promises.readFile(`${this.path}`, "utf-8")
+                // const parsed= JSON.parse(readedProduct)
+
+                // console.log("ESTA ES LA LISTA DE OBJETOS:",parsed);
+                 //return parsed
+                 console.log(objects);
+                return objects
                
          } catch (error) {
-             console.log("Lista vacía");
+             console.log("Error al obtener objetos");
          }
         
      }
      async deleteById(id){
-        await this.getAll()
-        const objects= this.contenido
+        
+        const objects= await this.getObjects()
         const objectDeleted= objects.filter((obj)=>obj.id !== id)
         console.log(`SE HA BORRADO EL OBJ CON EL ID ${id}, NUEVA LISTA DE OBJ: `, objectDeleted);
         return objectDeleted || null
      }
      async deleteAll(){
-        await this.getAll()
-       await fs.promises.writeFile(this.path,[])
-       this.getAll()
+      try {
+         await this.saveObjects([])
+      } catch (error) {
+        console.log("error al eliminar objetos", error);
+      }
+       
+     }
+     async getObjects(){
+      try {
+        const data=await fs.promises.readFile(this.path,'utf-8')
+        return data ? JSON.parse(data) : undefined
+      } catch (error) {
+      return undefined
+      }
+     }
+
+     async saveObjects(obj){
+      try {
+        await fs.promises.writeFile(this.path, JSON.stringify(obj,null,2))
+      } catch (error) {
+        console.log("No se puedieron guardar los objs", error);
+      }
      }
 
  }
- const contenedor1 = new Contenedor("productos.txt")
+ async function test() {
+  const contenedor1 = new Contenedor("productos.txt");
 
- const prod1= {
-     title: "Manzana",
-     price: 250,
-     thumbnail: "ruta1"
- }
- const prod2= {
-     title: "Manzanas",
-     price: 2502,
-     thumbnail: "ruta2"
- }
+  const prod1 = {
+    title: "Manzana",
+    price: 250,
+    thumbnail: "ruta1"
+  };
+  const prod2 = {
+    title: "Manzanas",
+    price: 2506,
+    thumbnail: "ruta2"
+  };
+  const prod3 = {
+    title: "Peras",
+    price: 2506,
+    thumbnail: "ruta2"
+  };
 
-contenedor1.save(prod1)
-contenedor1.save(prod2)
+  const obj1 = await contenedor1.save(prod1);
+  console.log("Se cargó el objeto", obj1);
 
- contenedor1.getAll()
-contenedor1.getById(1)
-contenedor1.deleteById(2)
-contenedor1.deleteAll()
+  const obj2 = await contenedor1.save(prod2);
+  console.log("Se cargó el objeto", obj2);
+
+  const obj3 = await contenedor1.save(prod3);
+  console.log("Se cargó el objeto", obj3);
+
+
+  const allObjects = await contenedor1.getAll();
+  console.log("All objects:", allObjects);
+  const getElement= await contenedor1.getById(2)
+
+  const deleteObjectByID= await contenedor1.deleteById(2)
+  const deleteAllProds= await contenedor1.deleteAll()
+  console.log("Se borró toda la lista, lista nueva:", deleteAllProds);
+}
+
+test();
