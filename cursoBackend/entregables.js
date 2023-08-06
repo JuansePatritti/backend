@@ -161,12 +161,27 @@ const fs = require('fs')
     thumbnail: "ruta1"
   };
   const prod2 = {
-    title: "Manzanas",
+    title: "Sandia",
     price: 2506,
     thumbnail: "ruta2"
   };
   const prod3 = {
-    title: "Peras",
+    title: "Pera",
+    price: 2506,
+    thumbnail: "ruta2"
+  };
+  const prod4 = {
+    title: "Frutilla",
+    price: 2506,
+    thumbnail: "ruta2"
+  };
+  const prod5 = {
+    title: "Melon",
+    price: 2506,
+    thumbnail: "ruta2"
+  };
+  const prod6 = {
+    title: "Uva",
     price: 2506,
     thumbnail: "ruta2"
   };
@@ -179,15 +194,18 @@ const fs = require('fs')
 
   const obj3 = await contenedor1.save(prod3);
   console.log("Se cargó el objeto", obj3);
+  const obj4 = await contenedor1.save(prod4);
+  console.log("Se cargó el objeto", obj4);
+  const obj5 = await contenedor1.save(prod5);
+  console.log("Se cargó el objeto", obj5);
+  const obj6 = await contenedor1.save(prod6);
+  console.log("Se cargó el objeto", obj6);
 
 
   const allObjects = await contenedor1.getAll();
   console.log("All objects:", allObjects);
   const getElement= await contenedor1.getById(2)
 
-  const deleteObjectByID= await contenedor1.deleteById(2)
-  const deleteAllProds= await contenedor1.deleteAll()
-  console.log("Se borró toda la lista, lista nueva:", deleteAllProds);
 }
 
 test();

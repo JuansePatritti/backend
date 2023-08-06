@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "title": "Manzana",
+    "price": 250,
+    "thumbnail": "ruta1",
+    "id": 1
+  },
+  {
+    "title": "Sandia",
+    "price": 2506,
+    "thumbnail": "ruta2",
+    "id": 2
+  },
+  {
+    "title": "Pera",
+    "price": 2506,
+    "thumbnail": "ruta2",
+    "id": 3
+  },
+  {
+    "title": "Frutilla",
+    "price": 2506,
+    "thumbnail": "ruta2",
+    "id": 4
+  },
+  {
+    "title": "Melon",
+    "price": 2506,
+    "thumbnail": "ruta2",
+    "id": 5
+  },
+  {
+    "title": "Uva",
+    "price": 2506,
+    "thumbnail": "ruta2",
+    "id": 6
+  }
+]
